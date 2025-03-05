@@ -8,7 +8,11 @@ import {
 } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const router = createBrowserRouter(createRoutesFromElements());
+import Dashboard from './components/pages/Dashboard.page';
+
+const router = createBrowserRouter(
+  createRoutesFromElements(<Route path="dashboard" element={<Dashboard />} />)
+);
 
 const queryClient = new QueryClient({});
 
