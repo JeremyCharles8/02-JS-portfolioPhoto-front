@@ -6,6 +6,7 @@ export const metaDataSchema = z.array(
     fileName: z.string(),
     title: z.string(),
     caption: z.string(),
+    albumId: z.number(),
     album: z.string(),
     createdAt: z.string(),
   })

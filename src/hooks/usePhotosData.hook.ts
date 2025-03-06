@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { metaDataSchema } from '../schemas/photo.shcema';
 import { errorSchema } from '../schemas/error.schema';
-import { MetaData } from '../types/photo.type';
+import { MetaData } from '../@types/photo.type';
 
 const apiUrl: string = import.meta.env.VITE_API_URL;
 
@@ -18,9 +18,9 @@ const getAllPhotos = async () => {
     throw new Error(errorData.error);
   }
 
-  const data: MetaData = await response.json();
+  const photosData: MetaData = await response.json();
 
-  return metaDataSchema.parse(data);
+  return metaDataSchema.parse(photosData);
 };
 
 export const usePhotoMetaData = () => {

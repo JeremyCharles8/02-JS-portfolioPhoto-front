@@ -4,7 +4,7 @@
 
 - [x] get and display all ablums in a navigation bar
 
-- [ ] display all photos in each album when user selects it
+- [x] display all photos in each album when user selects it
 
 - [ ] add possibility to add a photo and delete photo
 

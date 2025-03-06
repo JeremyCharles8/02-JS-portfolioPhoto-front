@@ -1,73 +1,31 @@
-import { useNavigate } from 'react-router-dom';
-import { usePhotoMetaData } from '../hooks/usePhotosData.hook';
+import { useState } from 'react';
 
-import { albumSchema } from '../schemas/album.schema';
-import { errorSchema } from '../schemas/error.schema';
-
-const apiUrl: string = import.meta.env.VITE_API_URL;
-
-const getAlbums = async () => {
-  try {
-    const response = await fetch(`${apiUrl}/albums/`, {
-      method: 'GET',
-      headers: {
-        credentials: 'include',
-      },
-    });
-    if (!response.ok) {
-      const errorData = errorSchema.parse(await response.json());
-      return { status: response.status, error: errorData.error, data: null };
-    }
-
-    const data = albumSchema.parse(await response.json());
-
-    return { status: response.status, error: null, data };
-  } catch (error) {
-    console.log(error);
-  }
-};
+import { usePhotoMetaData } from '../../hooks/usePhotosData.hook';
+import { useAlbums } from '../../hooks/useAlbums.hook';
+import { ListAlbums } from '../elements/ListAlbums.element';
 
 export default function Dashboard() {
-  const navigate = useNavigate();
+  const [selectedAlbum, setSelectedAlbum] = useState<number | null>(null);
+  const { albums, loadingAlbum, errorAlbum } = useAlbums();
   const { data, isError, error } = usePhotoMetaData();
-
   //TODO manage error if isError and manage loading
 
-  //Create list with all album name
-  const listAlbums = async () => {
-    const albums = await getAlbums();
-
-    if (albums && albums.error) {
-      if (albums.status === 404) {
-        return <p className="nav__error">Ressource introuvable</p>;
-      }
-      if (albums.status === 500) {
-        return (
-          <p className="nav__error">
-            Une erreur est survenu côté serveur, si le problème persiste
-            veuillez contacter l'administrateur
-          </p>
-        );
-      }
-      if (albums.status === 401) {
-        navigate('/auth');
-      }
-    }
-
-    if (albums && albums.data) {
-      return albums.data.map((item) => (
-        <li className="nav__item" key={item.id}>
-          {item.title}
-        </li>
-      ));
-    }
+  const handleSelectAlbum = (key: number) => {
+    setSelectedAlbum(key);
   };
 
-  //Create talble with all photo metadata
+  //Create table with all photo metadata
   const listPhotos = () => {
     if (data) {
-      return data.map((item) => (
-        <tr className="table__body--row">
+      let photoToList;
+      if (selectedAlbum) {
+        photoToList = data.filter((item) => item.albumId === selectedAlbum);
+      } else {
+        photoToList = data;
+      }
+
+      return photoToList.map((item) => (
+        <tr className="table__body--row" key={item.id}>
           <td className="table__body--column">{item.fileName}</td>
           <td className="table__body--column">{item.title}</td>
           <td className="table__body--column">{item.caption}</td>
@@ -82,7 +40,13 @@ export default function Dashboard() {
   return (
     <section className="container">
       <nav className="nav">
-        <ul className="nav__list">{listAlbums()}</ul>
+        <ul>
+          <ListAlbums
+            albums={albums}
+            error={errorAlbum}
+            onSelect={handleSelectAlbum}
+          />
+        </ul>
       </nav>
       <section className="main">
         <table className="main__table">
