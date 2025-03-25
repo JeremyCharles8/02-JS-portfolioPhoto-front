@@ -7,7 +7,7 @@ import { AlbumList } from '../@types/album.type';
 
 const apiUrl: string = import.meta.env.VITE_API_URL;
 
-const getAlbums = async () => {
+const getAlbumName = async () => {
   try {
     const response = await fetch(`${apiUrl}/albums/`, {
       method: 'GET',
@@ -36,7 +36,7 @@ export const useAlbums = () => {
 
   useEffect(() => {
     const fetchAlbums = async () => {
-      const albums = await getAlbums();
+      const albums = await getAlbumName();
       if (albums && albums.error) {
         if (albums.status === 401) {
           navigate('/auth');
@@ -53,5 +53,5 @@ export const useAlbums = () => {
     fetchAlbums();
   });
 
-  return { albums, loadingAlbum: isLoading, errorAlbum: error };
+  return { albums, isloadingAlbum: isLoading, errorAlbum: error };
 };

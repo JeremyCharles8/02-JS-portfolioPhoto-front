@@ -10,8 +10,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import Dashboard from './components/pages/Dashboard.page';
 
+import './components/styles/index.scss';
+
 const router = createBrowserRouter(
-  createRoutesFromElements(<Route path="dashboard" element={<Dashboard />} />)
+  createRoutesFromElements(<Route path="/dashboard" element={<Dashboard />} />)
 );
 
 const queryClient = new QueryClient({});
