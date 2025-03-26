@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { metaDataSchema } from '../schemas/photo.shcema';
+import { metaDataSchema } from '../schemas/photo.schema';
 import { errorSchema } from '../schemas/error.schema';
 import { MetaData } from '../@types/photo.type';
 

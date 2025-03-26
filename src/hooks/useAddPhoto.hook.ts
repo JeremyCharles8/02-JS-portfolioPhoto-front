@@ -2,10 +2,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { errorSchema } from '../schemas/error.schema';
+import { AddPhoto } from '../@types/photo.type';
 
 const apiUrl: string = import.meta.env.VITE_API_URL;
 
-const fetchAddPhoto = async (formData) => {
+const fetchAddPhoto = async (formData: AddPhoto) => {
   try {
     const response = await fetch(`${apiUrl}/photos/`, {
       method: 'POST',
@@ -33,8 +34,7 @@ export const useAddPhoto = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  //TODO formData type
-  const addPhoto = async (formData) => {
+  const addPhoto = async (formData: AddPhoto) => {
     const result = await fetchAddPhoto(formData);
     setIsAdding(true);
     if (result && result.error) {
@@ -53,5 +53,10 @@ export const useAddPhoto = () => {
     setIsAdding(false);
   };
 
-  return { addPhoto, errorAddPhoto: error, isAdding, successMessage };
+  return {
+    addPhoto,
+    errorAddPhoto: error,
+    isAdding,
+    successMessageAddPhoto: successMessage,
+  };
 };

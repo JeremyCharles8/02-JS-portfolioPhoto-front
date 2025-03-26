@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { ListAlbums } from '../elements/ListAlbums.element';
+import { AddPhotoModal } from '../elements/AddPhoto.element';
 import { usePhotoMetaData } from '../../hooks/usePhotosData.hook';
 import { useAlbums } from '../../hooks/useAlbums.hook';
-import { ListAlbums } from '../elements/ListAlbums.element';
 import { useDeletePhoto } from '../../hooks/useDeletePhoto.hook';
+import { useAddPhoto } from '../../hooks/useAddPhoto.hook';
 
 import '../styles/dashboard.scss';
 
@@ -33,6 +35,7 @@ export default function Dashboard() {
   //? Optimization? replace array by object for selectedPhoto
   const [selectedAlbum, setSelectedAlbum] = useState<number | null>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<number[]>([]);
+  const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false);
   const [isRadialOpen, setIsRadialOpen] = useState(false);
   //TODO manage if isLoading
   const { albums, isLoadingAlbum, errorAlbum } = useAlbums();
@@ -41,6 +44,8 @@ export default function Dashboard() {
   //TODO manage modale with error or success message
   const { deletePhoto, isDeleting, errorDeletePhoto, successMessage } =
     useDeletePhoto();
+  const { addPhoto, isAdding, errorAddPhoto, successMessageAddPhoto } =
+    useAddPhoto();
   const radialMenuRef = useRef<HTMLButtonElement | null>(null);
 
   //If radial menu is open, add event listener to close it on click
@@ -78,7 +83,7 @@ export default function Dashboard() {
     setSelectedAlbum(key);
   };
 
-  //If element(s) already exist in seletedPhoto remove it, else add it
+  //Manage selected photo : If element(s) already exist in seletedPhoto remove it, else add it
   const handleSelectPhoto = (photoId: number | null) => {
     if (!photoId) {
       if (
@@ -135,6 +140,12 @@ export default function Dashboard() {
 
   return (
     <section className="container">
+      {isAddPhotoModalOpen && (
+        <AddPhotoModal
+          onClose={() => setIsAddPhotoModalOpen(false)}
+          onSubmit={addPhoto}
+        />
+      )}
       <nav className="nav">
         <ul>
           <li
@@ -179,7 +190,12 @@ export default function Dashboard() {
             </ul>
           ))}
         <header className="main__header">
-          <button className="header__addButton">+</button>
+          <button
+            className="header__addButton"
+            onMouseDown={() => setIsAddPhotoModalOpen(true)}
+          >
+            +
+          </button>
         </header>
         <table className="main__table">
           <thead className="table__head">
